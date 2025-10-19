@@ -7,7 +7,7 @@ from appium.options.android import UiAutomator2Options as Options
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
-        options = Options
+        options = Options()
         options.platform_name = 'Android'
         options.app_package = 'com.blogspot.e_kanivets.moneytracker'
         options.udid = '354706972253037'
