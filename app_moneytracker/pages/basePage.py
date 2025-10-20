@@ -22,4 +22,13 @@ class BasePage(object):
         except TimeoutException:
             return False
 
+    def get_text(self, locator):
+        """Espera um elemento ser visível e retorna o seu atributo 'text'."""
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(locator))
+            return element.text
+        except TimeoutException:
+            print(f"Erro: Elemento com localizador '{locator}' não foi encontrado a tempo.")
+            return None
+
 
