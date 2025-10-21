@@ -21,7 +21,7 @@ class IncomeTestCase(BaseTestCase):
         add_income_page.preencher_valor(TestData.VALOR_RECEITA)
         add_income_page.preencher_nota(TestData.NOTA_RECEITA)
 
-        # --- CORREÇÃO: Chama o método para digitar a categoria ---
+        # --- CORREÇÃO: Chama o metodo para digitar a categoria ---
         add_income_page.preencher_categoria(TestData.CATEGORIA_RECEITA)
 
         # Seleciona a conta no dropdown

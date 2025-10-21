@@ -38,7 +38,7 @@ class AddIncomePage(BasePage):
         print(f"Preenchendo nota (título): '{nota}'")
         self.send_keys(self.NOTE_FIELD, nota)
 
-    # --- MÉTODO CORRIGIDO ---
+    # --- METODO CORRIGIDO ---
     def preencher_categoria(self, nome_categoria):
         """Digita diretamente no campo de texto da categoria."""
         print(f"Preenchendo categoria: '{nome_categoria}'")

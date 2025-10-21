@@ -13,7 +13,7 @@ class AccountTestCase(BaseTestCase):
         add_account_page.preencher_nome_conta(TestData.NOME_CONTA)
         add_account_page.preencher_valor_inicial(TestData.VALOR_CONTA)
 
-        # CORREÇÃO: Usando o método correto e removendo a linha duplicada
+        # CORREÇÃO: Usando o metodo correto e removendo a linha duplicada
         account_page_final = add_account_page.clicar_salvar_criacao()
 
         self.assertTrue(account_page_final.verificar_se_conta_existe(TestData.NOME_CONTA),
@@ -27,7 +27,7 @@ class AccountTestCase(BaseTestCase):
         add_account_page = account_page.clicar_adicionar_conta()
         add_account_page.preencher_valor_inicial(TestData.VALOR_CONTA)
 
-        # CORREÇÃO: Usando o método correto
+        # CORREÇÃO: Usando o metodo correto
         add_account_page.clicar_salvar_criacao()
 
         mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
@@ -41,7 +41,7 @@ class AccountTestCase(BaseTestCase):
         add_account_page = account_page.clicar_adicionar_conta()
         add_account_page.preencher_nome_conta("Conta Sem Valor")
 
-        # CORREÇÃO: Usando o método correto
+        # CORREÇÃO: Usando o metodo correto
         add_account_page.clicar_salvar_criacao()
 
         mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
