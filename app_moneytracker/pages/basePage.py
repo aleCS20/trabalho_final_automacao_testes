@@ -12,7 +12,9 @@ class BasePage(object):
         element.click()
 
     def send_keys(self, locator, text):
+        """Envia texto para um elemento, limpando o campo antes."""
         element = self.wait.until(EC.visibility_of_element_located(locator))
+        element.clear()
         element.send_keys(text)
 
     def is_visible(self, locator):

@@ -40,3 +40,15 @@ class AccountPage(BasePage):
         print(f"Obtendo saldo da conta '{nome_da_conta}'...")
         locator = (self.ACCOUNT_BALANCE_IN_LIST[0], self.ACCOUNT_BALANCE_IN_LIST[1].format(nome_da_conta))
         return self.get_text(locator)
+
+    def selecionar_conta_por_nome(self, nome_da_conta):
+        """Encontra uma conta na lista, clica nela e ESPERA a tela de edição carregar."""
+        from app_moneytracker.pages.addAccountPage import AddAccountPage
+        print(f"Selecionando a conta '{nome_da_conta}' para edição...")
+        locator = (self.ACCOUNT_NAME_IN_LIST[0], self.ACCOUNT_NAME_IN_LIST[1].format(nome_da_conta))
+        self.click(locator)
+
+        edit_page = AddAccountPage(self.driver)
+        edit_page.wait_for_edit_page_to_load()
+
+        return edit_page

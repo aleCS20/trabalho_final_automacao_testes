@@ -5,115 +5,191 @@ from app_moneytracker.pages.mainPage import MainPage
 class AccountTestCase(BaseTestCase):
     """Conjunto de testes para a funcionalidade de Contas (Accounts)."""
 
-    def test_cadastrar_conta_sucesso(self): # - OK
-        """Corresponde ao TC-ACC-01: Cadastrar uma conta com sucesso."""
+    def test_cadastrar_conta_sucesso(self):
         print("\n--- Iniciando TC-ACC-01: Cadastrar conta com sucesso ---")
-
-        # 1. PREPARAÇÃO: Instancia a página inicial
         main_page = MainPage(self.driver)
-
-        # 2. AÇÃO: Executa o fluxo encadeando as chamadas de página
-        # "Feche o diálogo, navegue para contas, clique em adicionar conta..."
-        account_page = main_page.fechar_dialogo_inicial_se_existir() \
-            .navegar_para_accounts()
-
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
         add_account_page = account_page.clicar_adicionar_conta()
         add_account_page.preencher_nome_conta(TestData.NOME_CONTA)
         add_account_page.preencher_valor_inicial(TestData.VALOR_CONTA)
 
-        # Salvar retorna para a página da lista de contas
-        account_page = add_account_page.clicar_salvar()
+        # CORREÇÃO: Usando o método correto e removendo a linha duplicada
+        account_page_final = add_account_page.clicar_salvar_criacao()
 
-        # 3. VERIFICAÇÃO: Confirma se a conta foi criada na lista
-        self.assertTrue(account_page.verificar_se_conta_existe(TestData.NOME_CONTA),
+        self.assertTrue(account_page_final.verificar_se_conta_existe(TestData.NOME_CONTA),
                         f"A conta '{TestData.NOME_CONTA}' não foi encontrada na lista após o cadastro.")
-
         print("--- TC-ACC-01 Concluído com Sucesso ---")
 
-    def test_cadastrar_conta_sem_nome(self): # - OK
-        """Corresponde ao TC-ACC-02: Tentar cadastrar uma conta sem nome."""
+    def test_cadastrar_conta_sem_nome(self):
         print("\n--- Iniciando TC-ACC-02: Cadastrar conta sem nome ---")
-
-        # 1. PREPARAÇÃO
         main_page = MainPage(self.driver)
-        # As outras páginas serão instanciadas conforme a navegação
-
-        # 2. AÇÃO
-        account_page = main_page.fechar_dialogo_inicial_se_existir() \
-                                .navegar_para_accounts()
-
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
         add_account_page = account_page.clicar_adicionar_conta()
-
-        # Pula o preenchimento do nome, que é o objetivo do teste
         add_account_page.preencher_valor_inicial(TestData.VALOR_CONTA)
-        add_account_page.clicar_salvar() # Tenta salvar com o nome em branco
 
-        # 3. VERIFICAÇÃO
-        # Chama o metodo para capturar a mensagem de erro que deve aparecer
+        # CORREÇÃO: Usando o método correto
+        add_account_page.clicar_salvar_criacao()
+
         mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
+        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_obtida)
+        print("--- TC-ACC-02 Concluído com Sucesso! ---")
 
-        # Compara a mensagem obtida com a mensagem esperada do arquivo Data.py
-        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_obtida,
-                         "A mensagem de erro para nome de conta em branco não corresponde ao esperado.")
-
-        print(f"--- TC-ACC-02 Concluído com Sucesso! Mensagem de erro '{mensagem_erro_obtida}' "
-              f"exibida como esperado. ---")
-
-    def test_cadastrar_conta_sem_valor_inicial(self): # - OK
-        """Corresponde ao TC-ACC-03: Tentar cadastrar uma conta sem valor inicial."""
+    def test_cadastrar_conta_sem_valor_inicial(self):
         print("\n--- Iniciando TC-ACC-03: Cadastrar conta sem valor inicial ---")
-
-        # 1. PREPARAÇÃO
         main_page = MainPage(self.driver)
-
-        # 2. AÇÃO
-        account_page = main_page.fechar_dialogo_inicial_se_existir() \
-            .navegar_para_accounts()
-
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
         add_account_page = account_page.clicar_adicionar_conta()
-        # Preenche o nome, mas pula o valor inicial
         add_account_page.preencher_nome_conta("Conta Sem Valor")
-        add_account_page.clicar_salvar()
 
-        # 3. VERIFICAÇÃO
-        # O metodo obter_mensagem_de_erro() já sabe como encontrar o elemento pelo ID correto.
+        # CORREÇÃO: Usando o método correto
+        add_account_page.clicar_salvar_criacao()
+
         mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
-
-        # Compara a mensagem obtida com a mensagem esperada.
-        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_obtida,
-                         "A mensagem de erro para valor inicial em branco não corresponde ao esperado.")
-
-        print(f"--- TC-ACC-03 Concluído com Sucesso! Mensagem de erro '{mensagem_erro_obtida}' "
-            f"exibida como esperado. ---")
+        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_obtida)
+        print("--- TC-ACC-03 Concluído com Sucesso! ---")
 
     def test_cadastrar_conta_valor_zero(self):
-        """Corresponde ao TC-ACC-04: Cadastrar uma conta com valor inicial 0."""
         print("\n--- Iniciando TC-ACC-04: Cadastrar conta com valor zero ---")
-
-        # 1. PREPARAÇÃO
         main_page = MainPage(self.driver)
         nome_da_conta = "Conta com Saldo Zero"
-
-        # 2. AÇÃO
-        account_page = main_page.fechar_dialogo_inicial_se_existir() \
-            .navegar_para_accounts()
-
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
         add_account_page = account_page.clicar_adicionar_conta()
         add_account_page.preencher_nome_conta(nome_da_conta)
         add_account_page.preencher_valor_inicial("0")
-        account_page_final = add_account_page.clicar_salvar()
 
-        # 3. VERIFICAÇÃO
-        # Primeiro, verifica se a conta foi criada
-        self.assertTrue(account_page_final.verificar_se_conta_existe(nome_da_conta),
-                        f"A conta '{nome_da_conta}' não foi encontrada na lista.")
+        # CORREÇÃO: Usando o metodo correto
+        account_page_final = add_account_page.clicar_salvar_criacao()
 
-        # Segundo, verifica se o saldo exibido está correto
+        self.assertTrue(account_page_final.verificar_se_conta_existe(nome_da_conta))
         saldo_obtido = account_page_final.obter_saldo_da_conta(nome_da_conta)
 
-        # O app formata "0" como "0.00", então comparamos com este valor
-        '''self.assertEqual("--", saldo_obtido.strip(),
-                         f"O saldo da conta não é '--'. Saldo encontrado: '{saldo_obtido}'")'''
+        # SUGESTÃO: Descomente esta linha para uma verificação mais completa
+        self.assertEqual("--", saldo_obtido.strip())
+        print(f"--- TC-ACC-04 Concluído com Sucesso! ---")
 
-        print(f"--- TC-ACC-04 Concluído com Sucesso! Conta criada com saldo '{saldo_obtido}'. ---")
+    def test_editar_conta_sucesso(self):
+        # Este teste já estava correto e não precisou de alterações.
+        print("\n--- Iniciando TC-ACC-05: Editar conta com sucesso ---")
+        main_page = MainPage(self.driver)
+        print("Setup: Criando conta inicial para ser editada...")
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
+        add_account_page = account_page.clicar_adicionar_conta()
+        add_account_page.preencher_nome_conta(TestData.NOME_CONTA_PARA_EDITAR)
+        add_account_page.preencher_valor_inicial("100")
+        account_page = add_account_page.clicar_salvar_criacao()
+        edit_account_page = account_page.selecionar_conta_por_nome(TestData.NOME_CONTA_PARA_EDITAR)
+        edit_account_page.preencher_nome_conta(TestData.NOME_CONTA_EDITADO)
+        final_account_page = edit_account_page.clicar_salvar_edicao()
+        self.assertTrue(final_account_page.verificar_se_conta_existe(TestData.NOME_CONTA_EDITADO))
+        self.assertFalse(final_account_page.verificar_se_conta_existe(TestData.NOME_CONTA_PARA_EDITAR))
+        print(f"--- TC-ACC-05 Concluído com Sucesso! ---")
 
+    def test_remover_conta_sucesso(self):
+        # Este teste já estava correto e não precisou de alterações.
+        print("\n--- Iniciando TC-ACC-06: Remover conta com sucesso ---")
+        main_page = MainPage(self.driver)
+        print("Setup: Criando conta para ser removida...")
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
+        add_account_page = account_page.clicar_adicionar_conta()
+        add_account_page.preencher_nome_conta(TestData.NOME_CONTA_PARA_REMOVER)
+        add_account_page.preencher_valor_inicial("50")
+        account_page = add_account_page.clicar_salvar_criacao()
+        edit_account_page = account_page.selecionar_conta_por_nome(TestData.NOME_CONTA_PARA_REMOVER)
+        final_account_page = edit_account_page.clicar_remover().confirmar_remocao()
+        self.assertFalse(final_account_page.verificar_se_conta_existe(TestData.NOME_CONTA_PARA_REMOVER))
+        print(f"--- TC-ACC-06 Concluído com Sucesso! ---")
+
+    def test_cadastrar_conta_nome_longo(self):
+        """Corresponde ao TC-ACC-07: Prova que o app permite cadastrar conta com nome > 20 caracteres."""
+        print("\n--- Iniciando TC-ACC-07: Cadastrar conta com nome longo ---")
+
+        # 1. PREPARAÇÃO
+        main_page = MainPage(self.driver)
+
+        # 2. AÇÃO
+        account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()
+        add_account_page = account_page.clicar_adicionar_conta()
+
+        # Preenche o nome com a string longa do nosso arquivo de dados
+        add_account_page.preencher_nome_conta(TestData.NOME_CONTA_LONGO)
+        # Preenche o valor inicial para isolar o erro
+        add_account_page.preencher_valor_inicial("50")
+
+        # Tenta salvar a conta, esperando que a ação falhe
+        add_account_page.clicar_salvar_criacao()
+
+        # 3. VERIFICAÇÃO (Lógica corrigida para esperar o erro)
+        # Captura a mensagem de erro que DEVERIA aparecer
+        print("Aguardando mensagem de erro para nome longo...")
+        mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
+
+        # Compara a mensagem obtida com a mensagem esperada do arquivo Data.py
+        self.assertEqual(TestData.MSG_ERRO_NOME_LONGO, mensagem_erro_obtida,
+                         "A mensagem de erro para nome de conta longo não corresponde ao esperado.")
+
+        print("--- TC-ACC-07 Concluído com Sucesso! Mensagem de erro exibida como esperado. ---")
+
+    def test_cadastrar_conta_valor_longo(self):
+        """Corresponde ao TC-ACC-08: Tentar cadastrar uma conta com valor > 13 caracteres."""
+        print("\n--- Iniciando TC-ACC-08: Cadastrar conta com valor longo ---")
+
+        # 1. PREPARAÇÃO
+        main_page = MainPage(self.driver)
+
+        # 2. AÇÃO
+        account_page = main_page.fechar_dialogo_inicial_se_existir() \
+            .navegar_para_accounts()
+
+        add_account_page = account_page.clicar_adicionar_conta()
+
+        # Preenche o nome da conta
+        add_account_page.preencher_nome_conta("Conta com Valor Longo")
+
+        # Preenche o valor com a string longa do nosso arquivo de dados
+        add_account_page.preencher_valor_inicial(TestData.VALOR_CONTA_LONGO)
+
+        # Tenta salvar a conta
+        add_account_page.clicar_salvar_criacao()
+
+        # 3. VERIFICAÇÃO
+        # Captura a mensagem de erro que deve aparecer
+        mensagem_erro_obtida = add_account_page.obter_mensagem_de_erro()
+
+        # Compara a mensagem obtida com a mensagem esperada do arquivo Data.py
+        self.assertEqual(TestData.MSG_ERRO_VALOR_LONGO, mensagem_erro_obtida,
+                         "A mensagem de erro para valor de conta longo não corresponde ao esperado.")
+
+        print(f"--- TC-ACC-08 Concluído com Sucesso! Mensagem de erro '{mensagem_erro_obtida}' "
+              f"exibida como esperado. ---")
+
+    def test_cadastrar_conta_campos_vazios(self):
+        """Corresponde ao TC-ACC-09: Tentar cadastrar uma conta com todos os campos vazios."""
+        print("\n--- Iniciando TC-ACC-09: Cadastrar conta com campos vazios ---")
+
+        # 1. PREPARAÇÃO
+        main_page = MainPage(self.driver)
+
+        # 2. AÇÃO
+        account_page = main_page.fechar_dialogo_inicial_se_existir() \
+            .navegar_para_accounts()
+
+        add_account_page = account_page.clicar_adicionar_conta()
+
+        # Tenta salvar o formulário completamente em branco
+        add_account_page.clicar_salvar_criacao()
+
+        # 3. VERIFICAÇÃO
+        # Captura as duas mensagens de erro separadamente
+        mensagem_erro_nome = add_account_page.obter_mensagem_erro_nome()
+        mensagem_erro_valor = add_account_page.obter_mensagem_erro_valor()
+
+        # Verifica se a mensagem de erro do campo NOME está correta
+        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_nome,
+                         "A mensagem de erro para o campo NOME não corresponde ao esperado.")
+
+        # Verifica se a mensagem de erro do campo VALOR está correta
+        self.assertEqual(TestData.MSG_ERRO_NOME_OBRIGATORIO, mensagem_erro_valor,
+                         "A mensagem de erro para o campo VALOR não corresponde ao esperado.")
+
+        print(f"--- TC-ACC-09 Concluído com Sucesso! Mensagens de erro exibidas "
+              f"corretamente para ambos os campos. ---")
