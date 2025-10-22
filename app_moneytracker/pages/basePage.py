@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from appium.webdriver.common.appiumby import AppiumBy
 
 class BasePage(object):
     def __init__(self, driver):
@@ -12,7 +13,6 @@ class BasePage(object):
         element.click()
 
     def send_keys(self, locator, text):
-        """Envia texto para um elemento, limpando o campo antes."""
         element = self.wait.until(EC.visibility_of_element_located(locator))
         element.clear()
         element.send_keys(text)
@@ -25,12 +25,25 @@ class BasePage(object):
             return False
 
     def get_text(self, locator):
-        """Espera um elemento ser visível e retorna o seu atributo 'text'."""
+
         try:
             element = self.wait.until(EC.visibility_of_element_located(locator))
+
             return element.text
         except TimeoutException:
             print(f"Erro: Elemento com localizador '{locator}' não foi encontrado a tempo.")
+
             return None
 
+    def get_toast_text(self):
+
+        try:
+            toast_locator = (AppiumBy.XPATH, '//android.widget.Toast')
+            toast_element = self.wait.until(EC.presence_of_element_located(toast_locator))
+
+            return toast_element.get_attribute('name')
+        except TimeoutException:
+            print(f"Erro: Mensagem Toast não foi encontrada a tempo.")
+
+            return None
 

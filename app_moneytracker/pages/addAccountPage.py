@@ -1,10 +1,9 @@
-from app_moneytracker.Data import TestData
 from app_moneytracker.pages.basePage import BasePage
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support import expected_conditions as EC
 
 class AddAccountPage(BasePage):
-    # --- Localizadores (Verifique estes IDs com o Appium Inspector) ---
+    # --- Localizadores dos elementos ---
     ACCOUNT_NAME_FIELD = (AppiumBy.ID, "com.blogspot.e_kanivets.moneytracker:id/etTitle")
     INITIAL_VALUE_FIELD = (AppiumBy.ID, "com.blogspot.e_kanivets.moneytracker:id/et_init_sum")
 
@@ -26,10 +25,11 @@ class AddAccountPage(BasePage):
         super().__init__(driver)
 
     def wait_for_edit_page_to_load(self):
-        """Espera por um elemento único da página de EDIÇÃO para garantir que ela carregou."""
+
         print("Aguardando a página de edição de conta carregar...")
         self.wait.until(EC.visibility_of_element_located(self.SAVE_BUTTON_EDIT))
         print("Página de edição de conta carregada.")
+
         return self
 
     def preencher_nome_conta(self, nome):
@@ -42,37 +42,45 @@ class AddAccountPage(BasePage):
 
     def clicar_salvar_criacao(self):
         from app_moneytracker.pages.accountPage import AccountPage
+
         print("Clicando no botão Salvar (Criação)...")
         self.click(self.SAVE_BUTTON_CREATE)
+
         return AccountPage(self.driver)
 
     def clicar_salvar_edicao(self):
         from app_moneytracker.pages.accountPage import AccountPage
+
         print("Clicando no botão Salvar (Edição)...")
         self.click(self.SAVE_BUTTON_EDIT)
+
         return AccountPage(self.driver)
 
     def clicar_remover(self):
         print("Clicando no ícone para 'Arquivar' a conta...")
         self.click(self.DELETE_BUTTON)
+
         return self
 
     def confirmar_remocao(self):
         from app_moneytracker.pages.accountPage import AccountPage
+
         print("Confirmando a remoção da conta...")
         self.click(self.CONFIRM_DELETE_BUTTON)
+
         return AccountPage(self.driver)
 
     def obter_mensagem_de_erro(self):
         print("Aguardando mensagem de erro abaixo do campo...")
+
         return self.get_text(self.ERROR_MESSAGE_TEXT)
 
     def obter_mensagem_erro_nome(self):
-        """Captura o texto da mensagem de erro abaixo do campo NOME."""
         print("Aguardando mensagem de erro do campo Nome...")
+
         return self.get_text(self.ERROR_MESSAGE_NAME_FIELD)
 
     def obter_mensagem_erro_valor(self):
-        """Captura o texto da mensagem de erro abaixo do campo VALOR."""
         print("Aguardando mensagem de erro do campo Valor...")
+
         return self.get_text(self.ERROR_MESSAGE_VALUE_FIELD)

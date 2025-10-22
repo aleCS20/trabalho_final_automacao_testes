@@ -7,7 +7,6 @@ class MainPageTestCase(BaseTestCase):
         print("\n ----- Iniciando o teste da tela inicial e caixa de dialogo ------ ")
 
         main_page = MainPage(self.driver)
-
         main_page.fechar_dialogo_inicial_se_existir()
 
         self.assertTrue(main_page.verificar_se_tela_principal_carregou(),
