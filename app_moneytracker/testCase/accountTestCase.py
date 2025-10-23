@@ -8,7 +8,7 @@ class AccountTestCase(BaseTestCase):
     """Conjunto de testes para a funcionalidade de Contas (Accounts)."""
 
     def test_cadastrar_conta_sucesso(self):
-        """Corresponde ao TC-ACC-01: cadastrar um conta com sucesso."""
+        """Corresponde ao TC-ACC-01: cadastrar uma conta com sucesso."""
         print("\n--- Iniciando TC-ACC-01: Cadastrar conta com sucesso ---")
         main_page = MainPage(self.driver)
         account_page = main_page.fechar_dialogo_inicial_se_existir().navegar_para_accounts()

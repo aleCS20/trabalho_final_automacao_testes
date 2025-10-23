@@ -1,9 +1,7 @@
-import time
-
 from app_moneytracker.testCase.baseTestCase import BaseTestCase
 from app_moneytracker.Data import TestData
 from app_moneytracker.pages.mainPage import MainPage
-from datetime import date, timedelta, time
+from datetime import date, timedelta
 
 class IncomeTestCase(BaseTestCase):
     """Conjunto de testes para a funcionalidade de Receitas (Income)."""
